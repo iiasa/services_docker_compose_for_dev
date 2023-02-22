@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  
+  web_be:
+    build:
+      context: "${PROJECT_FOLDER:?err}"
+      dockerfile: Dockerfile.dev
+    volumes:
+      - "${PROJECT_FOLDER:?err}:/app/"
+    ports:
+      - 8000:8000
+    env_file:
+      - ./.env.web.be
+    # depends_on:
+    #   - db
+    #   - redisdb
+    #   - celery_worker
