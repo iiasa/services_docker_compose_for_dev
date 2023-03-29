@@ -1,3 +1,4 @@
 .env
 .env.web.be
 .env.web.fe
+.env.geoserver
