@@ -2,3 +2,4 @@
 .env.web.be
 .env.web.fe
 .env.geoserver
+.env.minio

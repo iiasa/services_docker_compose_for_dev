@@ -5,8 +5,21 @@ volumes:
         external: false
     mongodb_volume:
         external: false
+    minio_data:
+        external: false
 
 services:
+
+  minio:
+    image: minio/minio
+    ports:
+      - 9000:9000
+      - 9001:9001
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+    env_file:
+      - ./.env.minio
   
   web_be:
     build:
@@ -34,16 +47,16 @@ services:
       - ./.env.web.fe
     depends_on:
       - web_be
-  geoserver:
-    image: docker.osgeo.org/geoserver:2.22.0
-    ports:
-      - 5000:8080
-    volumes:
-      - geoserver_volume:/opt/geoserver_data
-    # depends_on:
-    #   - mongodb
-    env_file:
-      - ./.env.geoserver
+  # geoserver:
+  #   image: docker.osgeo.org/geoserver:2.22.0
+  #   ports:
+  #     - 5000:8080
+  #   volumes:
+  #     - geoserver_volume:/opt/geoserver_data
+  #   # depends_on:
+  #   #   - mongodb
+  #   env_file:
+  #     - ./.env.geoserver
   # mongodb:
   #   image: rapidfort/mongodb:5.0
   #   environment:
@@ -53,14 +66,14 @@ services:
   #     - 27017:27017
   #   volumes:
   #     - mongodb_volume:/data/db
-  extract_netcdf: 
-    build:
-      context: "${EXTRACT_NETCDF_PROJECT_FOLDER:?err}"
-      dockerfile: Dockerfile
-    command: sleep infinity
-    volumes:
-      - "${EXTRACT_NETCDF_PROJECT_FOLDER:?err}:/app/"
-      - geoserver_volume:/app/data/geoserver
-    depends_on:
-      - geoserver
+  # extract_netcdf: 
+  #   build:
+  #     context: "${EXTRACT_NETCDF_PROJECT_FOLDER:?err}"
+  #     dockerfile: Dockerfile
+  #   command: sleep infinity
+  #   volumes:
+  #     - "${EXTRACT_NETCDF_PROJECT_FOLDER:?err}:/app/"
+  #     - geoserver_volume:/app/data/geoserver
+  #   depends_on:
+  #     - geoserver
     
