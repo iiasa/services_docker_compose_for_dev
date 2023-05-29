@@ -1,12 +1,12 @@
 version: '3.8'
 
 volumes:
-    geoserver_volume:
-        external: false
-    mongodb_volume:
-        external: false
-    minio_data:
-        external: false
+  geoserver_volume:
+    external: false
+  mongodb_volume:
+    external: false
+  minio_data:
+    external: false
 
 services:
 
@@ -20,7 +20,7 @@ services:
       - minio_data:/data
     env_file:
       - ./.env.minio
-  
+
   web_be:
     build:
       context: "${PROJECT_FOLDER:?err}"
@@ -76,4 +76,4 @@ services:
   #     - geoserver_volume:/app/data/geoserver
   #   depends_on:
   #     - geoserver
-    
+
