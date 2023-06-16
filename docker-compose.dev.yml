@@ -5,8 +5,22 @@ volumes:
     external: false
   mongodb_volume:
     external: false
+  minio_data:
+    external: false
 
 services:
+
+  minio:
+    image: minio/minio
+    ports:
+      - 9000:9000
+      - 9001:9001
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+      - "${MINIO_DEV_CERT_LOCATION:?err}:/root/.minio/certs"
+    env_file:
+      - ./.env.minio
 
   web_be:
     build:
