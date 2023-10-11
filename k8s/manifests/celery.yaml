@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rabbitmq-pubsub
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rabbitmq-pubsub
+  template:
+    metadata:
+      labels:
+        app: rabbitmq-pubsub
+    spec:
+      containers:
+      - name: rabbitmq-pubsub
+        image: registry.iiasa.ac.at/accelerator/rabbitmq:3-management-alpine
+        envFrom:
+          - secretRef:
+              name: rabbitmq-pubsub-secret
+        imagePullPolicy: Always
+        ports:
+        - name: "port1"
+          containerPort: 5672
+        - name: "port2"
+          containerPort: 15672
+        resources:
+          limits:
+            memory: "1024Mi"
+            cpu: "1000m"
+          requests:
+            memory: "1024Mi"
+            cpu: "1000m"
+      imagePullSecrets:
+        - name: iiasaregcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq-pubsub-service
+spec:
+  selector:
+    app: rabbitmq-pubsub
+  ports:
+    - protocol: TCP
+      name: "port1"
+      port: 5672
+      targetPort: 5672
+    - protocol: TCP
+      name: "port2"
+      port: 15672
+      targetPort: 15672
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: accelerator-celery
+spec:
+  containers:
+  - name: accelerator-celery
+    image: registry.iiasa.ac.at/accelerator/iiasa-acc-celery
+    envFrom:
+      - secretRef:
+          name: celery-cluster-secret
+    imagePullPolicy: Always
+    resources:
+      limits:
+        memory: "6144Mi"
+        cpu: "8000m"
+      requests:
+        memory: "6144Mi"
+        cpu: "8000m"
+
+  imagePullSecrets:
+    - name: iiasaregcred

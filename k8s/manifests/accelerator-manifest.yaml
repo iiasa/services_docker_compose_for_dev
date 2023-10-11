@@ -1,0 +1,98 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: accelerator-fe
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: accelerator-fe
+  template:
+    metadata:
+      labels:
+        app: accelerator-fe
+    spec:
+      containers:
+      - name: acc-fe
+        image: registry.iiasa.ac.at/accelerator/iiasa-acc-fe
+        # envFrom:
+        #   - secretRef:
+        #       name: accelerator-fe-secret
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            memory: "1024Mi"
+            cpu: "1000m"
+          requests:
+            memory: "64Mi"
+            cpu: "1000m"
+      
+      
+      imagePullSecrets:
+        - name: iiasaregcred
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: accelerator-be
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: accelerator-be
+  template:
+    metadata:
+      labels:
+        app: accelerator-be
+    spec:
+      containers:
+      - name: acc-be
+        image: registry.iiasa.ac.at/accelerator/iiasa-acc-be
+        envFrom:
+          - secretRef:
+              name: accelerator-be-secret
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8000
+        resources:
+          limits:
+            memory: "3072Mi"
+            cpu: "3000m"
+          requests:
+            memory: "2048Mi"
+            cpu: "2000m"
+      
+      
+      imagePullSecrets:
+        - name: iiasaregcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: accelerator-fe-service
+spec:
+  type: NodePort
+  selector:
+    app: accelerator-fe
+  ports:
+    - protocol: TCP
+      port: 8880
+      targetPort: 80
+      nodePort: 30106
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: accelerator-be-service
+spec:
+  type: NodePort
+  selector:
+    app: accelerator-be
+  ports:
+    - protocol: TCP
+      port: 8770
+      targetPort: 8000
+      nodePort: 30107
+
