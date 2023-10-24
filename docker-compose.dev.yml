@@ -103,6 +103,4 @@ services:
     depends_on:
       - web_be
       - rabbitmq
-  
-  
     
