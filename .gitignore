@@ -3,3 +3,7 @@
 .env.web.fe
 .env.geoserver
 .env.minio
+
+k8s/manifests/secrets/accelerator-be-secret.yaml
+k8s/manifests/secrets/celery-cluster-secret.yaml
+k8s/manifests/secrets/rabbitmq-pubsub-secret.yaml
