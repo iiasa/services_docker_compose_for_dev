@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: minio-proxy
 spec:
-  replicas: 1
+  replicas: 4
   selector:
     matchLabels:
       app: minio-proxy
@@ -23,11 +23,11 @@ spec:
         - containerPort: 9000
         resources:
           limits:
-            memory: "3072Mi"
-            cpu: "3000m"
+            memory: "1024Mi"
+            cpu: "1000m"
           requests:
-            memory: "2048Mi"
-            cpu: "2000m"
+            memory: "1024Mi"
+            cpu: "1000m"
       
       imagePullSecrets:
         - name: iiasaregcred
