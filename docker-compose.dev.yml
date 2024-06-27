@@ -14,6 +14,8 @@ volumes:
     external: false
   rabbitmq_log:
     external: false
+  registry_data:
+    external: false
 
 services:
   db:
@@ -148,6 +150,22 @@ services:
       - 8001:8000
     volumes:
       - "${ACCMS_PROJECT_FOLDER:?err}:/app/"
+
+  registry:
+    image: registry:2
+    ports:
+      - "5000:5000"
+    environment:
+      REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY: /var/lib/registry
+      REGISTRY_AUTH: htpasswd
+      REGISTRY_AUTH_HTPASSWD_REALM: Registry Realm
+      REGISTRY_AUTH_HTPASSWD_PATH: /auth/htpasswd
+
+    # Way to generate htpasswd file
+    # docker run --rm --entrypoint htpasswd httpd:2 -Bbn myregistry myregistrypassword > services_docker_compose_for_dev/registry_auth/htpasswd
+    volumes:
+      - registry_data:/var/lib/registry
+      - ./registry_auth:/auth
 
   nginx:
     build: 
