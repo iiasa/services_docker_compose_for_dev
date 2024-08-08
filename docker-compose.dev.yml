@@ -121,6 +121,7 @@ services:
     depends_on:
       - web_be
       - rabbitmq
+      - registry
 
   k8s_events:
     build:
