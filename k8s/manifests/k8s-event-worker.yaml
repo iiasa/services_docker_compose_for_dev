@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: accelerator-k8sworker
+spec:
+  containers:
+  - name: accelerator-k8sworker
+    image: registry.iiasa.ac.at/accelerator/iiasa-acc-k8sworker
+    envFrom:
+      - secretRef:
+          name: k8s-worker-secret
+    imagePullPolicy: Always
+    resources:
+      limits:
+        memory: "2000Mi"
+        cpu: "2000m"
+      requests:
+        memory: "2000Mi"
+        cpu: "2000m"
+
+  imagePullSecrets:
+    - name: iiasaregcred
