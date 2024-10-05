@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: titiler
-        image: ghcr.io/developmentseed/titiler:latest
+        image: registry.iiasa.ac.at/accelerator/titiler:latest
         envFrom:
           - secretRef:
               name: titiler-secret
@@ -41,5 +41,5 @@ spec:
     - protocol: TCP
       port: 8798
       targetPort: 8000
-      nodePort: 30177
+      nodePort: 30135
 
