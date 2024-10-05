@@ -28,6 +28,8 @@ spec:
           requests:
             memory: "4095Mi"
             cpu: "4000m"
+      imagePullSecrets:
+        - name: iiasaregcred
 ---
 apiVersion: v1
 kind: Service
