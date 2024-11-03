@@ -61,6 +61,8 @@ spec:
   containers:
   - name: accelerator-celery
     image: registry.iiasa.ac.at/accelerator/iiasa-acc-celery
+    securityContext:
+        privileged: true
     envFrom:
       - secretRef:
           name: celery-cluster-secret

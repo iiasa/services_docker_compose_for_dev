@@ -1,6 +1,3 @@
-version: '3.8'
-
-
 volumes:
   minio_data:
     external: false
@@ -49,6 +46,20 @@ services:
     env_file:
       - ./.env.minio
 
+  titiler:
+    build:
+      context: "${TITILER_FOLDER:?err}"
+      dockerfile: dockerfiles/Dockerfile.uvicorn
+    platform: linux/x86_64
+    ports:
+      - 8002:8000
+    environment:
+      - PORT=8000
+      - WORKERS_PER_CORE=1
+      - TITILER_API_DEBUG=1
+      - GDAL_HTTP_CURL_OPTIONS='-k'
+    
+
   web_be:
     build:
       context: "${PROJECT_FOLDER:?err}"
@@ -57,6 +68,7 @@ services:
       - "${PROJECT_FOLDER:?err}:/app/"
     ports:
       - 8000:8000
+      - 20102:20102
     env_file:
       - ./.env.web.be
     depends_on:
@@ -76,13 +88,13 @@ services:
       - ./.env.web.fe
     depends_on:
       - web_be  
-  # extract_netcdf: 
+  # convertert: 
   #   build:
-  #     context: "${EXTRACT_NETCDF_PROJECT_FOLDER:?err}"
+  #     context: "/Users/wrufesh/iiasa/accli/example_job_folder"
   #     dockerfile: Dockerfile
   #   command: sleep infinity
   #   volumes:
-  #     - "${EXTRACT_NETCDF_PROJECT_FOLDER:?err}:/app/"
+  #     - "/Users/wrufesh/iiasa/accli/example_job_folder:/app/"
 
   acli: 
     build:
@@ -96,22 +108,8 @@ services:
     build:
       context: "${CELERY_PROJECT_FOLDER:?err}"
       dockerfile: Dockerfile.dev
-    
-    env_file:
-      - ./.env.celery
-    volumes:
-      - "${CELERY_PROJECT_FOLDER:?err}:/app/"
-     
-    depends_on:
-      - web_be
-      - rabbitmq
 
-  image-builder-celery:
-    build:
-      context: "${CELERY_PROJECT_FOLDER:?err}"
-      dockerfile: Dockerfile.image.builder.worker.dev
-
-    privileged: true
+    # command: sleep infinity
     
     env_file:
       - ./.env.celery
@@ -121,7 +119,24 @@ services:
     depends_on:
       - web_be
       - rabbitmq
-      - registry
+
+  # image-builder-celery:
+  #   build:
+  #     context: "${CELERY_PROJECT_FOLDER:?err}"
+  #     # dockerfile: Dockerfile.image.builder.worker.dev
+  #     dockerfile: Dockerfile.buildah
+
+  #   # privileged: true
+    
+  #   env_file:
+  #     - ./.env.celery
+  #   volumes:
+  #     - "${CELERY_PROJECT_FOLDER:?err}:/home/nonroot/app/"
+     
+  #   depends_on:
+  #     - web_be
+  #     - rabbitmq
+  #     - registry
 
   k8s_events:
     build:
