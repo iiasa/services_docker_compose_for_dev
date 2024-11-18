@@ -38,7 +38,7 @@ kind: Deployment
 metadata:
   name: accelerator-be
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: accelerator-be
