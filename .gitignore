@@ -6,6 +6,7 @@
 .env.celery
 
 registry_auth/*
+!registry_auth/.gitkeep
 
 k8s/manifests/secrets/accelerator-be-secret.yaml
 k8s/manifests/secrets/celery-cluster-secret.yaml
