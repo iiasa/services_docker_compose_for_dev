@@ -9,6 +9,7 @@
 # .env
 1. Complete the directories in .env, the path should be $pwd/ $(the actual directory as written in the env)
 # .env.web.be
+1. Fill field `JWT_SECRET_KEY` and `JOB_SECRET_ENCRYPTION_KEY` with `Alx3lyaJdFmsg7veDP8xnWs1TX1UnrFLIFCNv8txgrA`
 # .env.web.fe
 # misc
     create localip entry in /etc/hosts
